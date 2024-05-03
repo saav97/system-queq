@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Systema de cola</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();  // Esto conectará automáticamente con tu servidor de Socket.IO
+
+        socket.on('queue_update', (data) => {
+            console.log(data);
+            document.getElementById('position').innerText = 'Posición en la cola: ' + data.position;
+            document.getElementById('length').innerText = 'Cantidad esperando: ' + data.length;
+            document.getElementById('activos').innerText = 'Cantidad activos: ' + data.activeConnections;
+            document.getElementById('time').innerText = 'Tiempo estimado de espera: ' + data.time + " Minutos";
+        });
+
+        socket.on('proceed', () => {
+            window.location.href = 'https://campusvirtual.uncoma.edu.ar';
+        });
+
+        function updatePosition() {
+            socket.emit('update');
+        }
+    </script>
+
+</head>
+
+<body>
+    <div class="container">
+        <img src="/assets/waiting.gif" alt="Queue Header Image" class="header-image">
+        <h1>Queue Management System</h1>
+        <div class="queue-info">
+            <p id="position">Your Position: Checking...</p>
+            <p id="length">Queue Length: Checking...</p>
+            <p id="activos">Active Connections: Checking...</p>
+            <p id="time">Estimated Time: Checking...</p>
+        </div>
+        <button onclick="updatePosition()">Update Position</button>
+    </div>
+</body>
+
+</html>
